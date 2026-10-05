@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Math - Infinite Math Worksheets & Software</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- KaTeX for rendered math expressions -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vertex: {
+                            navy: '#0f2b48',
+                            blue: '#1b4975',
+                            lightbg: '#f4f7fa',
+                            gold: '#f59e0b',
+                            red: '#dc2626',
+                            header: '#0a1d31'
+                        },
+                        kuta: {
+                            navy: '#0f2b48',
+                            blue: '#1b4975',
+                            lightbg: '#f4f7fa',
+                            gold: '#f59e0b',
+                            red: '#dc2626',
+                            header: '#0a1d31'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom print formatting for real worksheets */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-worksheet, #printable-worksheet * {
+                visibility: visible;
+            }
+            #printable-worksheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        .worksheet-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.5rem 2rem;
+        }
+
+        .math-expr {
+            font-size: 1.15rem;
+        }
+
+        /* Subtle grid background for generator paper */
+        .paper-bg {
+            background-color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-kuta-lightbg text-gray-800 font-sans min-h-screen flex flex-col selection:bg-kuta-gold selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-kuta-navy text-gray-200 text-xs py-1.5 px-4 text-center border-b border-blue-900 no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span><i class="fa-solid fa-sparkles text-amber-400 mr-1.5"></i> Try our brand new interactive online <strong>Worksheet Generator Studio</strong>!</span>
+            <div class="space-x-4 flex items-center">
+                <a href="#trial-modal" onclick="openTrialModal()" class="hover:text-amber-400 transition"><i class="fa-solid fa-download mr-1"></i> Free Downloads</a>
+                <span>|</span>
+                <a href="#support" onclick="switchTab('support')" class="hover:text-amber-400 transition"><i class="fa-solid fa-circle-question mr-1"></i> Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="bg-kuta-header text-white sticky top-0 z-40 shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center font-extrabold text-kuta-navy text-2xl shadow-md border border-amber-300">
+                        V
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black tracking-tight text-white uppercase font-serif">Vertex <span class="text-amber-400 font-sans font-light">Math</span></span>
+                        <p class="text-[10px] text-blue-200 tracking-wider font-medium uppercase -mt-1">Infinite Math Practice</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex space-x-1 text-sm font-medium">
+                    <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-md hover:bg-kuta-blue transition text-amber-400">Home</button>
+                    <button onclick="switchTab('generator')" id="nav-generator" class="nav-btn px-3 py-2 rounded-md hover:bg-kuta-blue transition text-white hover:text-amber-300"><i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-400"></i> Generator Studio</button>
+                    <button onclick="switchTab('worksheets')" id="nav-worksheets" class="nav-btn px-3 py-2 rounded-md hover:bg-kuta-blue transition text-white hover:text-amber-300">Free Worksheets</button>
+                    <button onclick="switchTab('products')" id="nav-products" class="nav-btn px-3 py-2 rounded-md hover:bg-kuta-blue transition text-white hover:text-amber-300">Products</button>
+                    <button onclick="switchTab('pricing')" id="nav-pricing" class="nav-btn px-3 py-2 rounded-md hover:bg-kuta-blue transition text-white hover:text-amber-300">Purchase</button>
+                </nav>
+
+                <!-- Search & Action CTA -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <button onclick="switchTab('generator')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-kuta-navy font-bold px-4 py-2 rounded-md shadow hover:shadow-lg transition text-xs flex items-center space-x-2">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Launch App</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white p-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-kuta-navy border-t border-blue-800 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('home')" class="block w-full text-left px-3 py-2 rounded text-white font-medium hover:bg-kuta-blue">Home</button>
+            <button onclick="switchTab('generator')" class="block w-full text-left px-3 py-2 rounded text-white font-medium hover:bg-kuta-blue">Generator Studio</button>
+            <button onclick="switchTab('worksheets')" class="block w-full text-left px-3 py-2 rounded text-white font-medium hover:bg-kuta-blue">Free Worksheets</button>
+            <button onclick="switchTab('products')" class="block w-full text-left px-3 py-2 rounded text-white font-medium hover:bg-kuta-blue">Software Products</button>
+            <button onclick="switchTab('pricing')" class="block w-full text-left px-3 py-2 rounded text-white font-medium hover:bg-kuta-blue">Purchase & Pricing</button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- HOME PAGE VIEW -->
+        <div id="view-home" class="view-panel">
+            <!-- Hero Banner -->
+            <section class="bg-gradient-to-b from-kuta-navy via-kuta-blue to-slate-900 text-white py-16 px-4 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-8 items-center relative z-10">
+                    <div class="md:col-span-7 space-y-6">
+                        <div class="inline-flex items-center space-x-2 bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Trusted by over 100,000+ Math Educators Worldwide</span>
+                        </div>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Infinite Math Worksheets Created in <span class="text-amber-400 underline decoration-amber-500 decoration-wavy decoration-2">Seconds</span>.
+                        </h1>
+                        <p class="text-lg text-blue-100 max-w-2xl font-light">
+                            Designed specifically for math teachers. Never run out of practice problems or multiple test versions again. Custom layouts, automatic step-by-step solutions, and instant print ready exports.
+                        </p>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="switchTab('generator')" class="bg-amber-500 hover:bg-amber-600 text-kuta-navy font-bold px-6 py-3.5 rounded-lg shadow-xl hover:shadow-2xl transition flex items-center space-x-2 text-base">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Open Interactive Generator</span>
+                            </button>
+                            <button onclick="switchTab('worksheets')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-6 py-3.5 rounded-lg transition text-base">
+                                <i class="fa-solid fa-file-pdf mr-2"></i> Browse Free PDFs
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Hero Interactive Quick Preview -->
+                    <div class="md:col-span-5">
+                        <div class="bg-white text-gray-900 rounded-xl p-5 shadow-2xl border-4 border-amber-400/40 transform rotate-1 hover:rotate-0 transition duration-300">
+                            <div class="border-b border-gray-200 pb-3 mb-4 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-sm text-kuta-navy">Infinite Algebra 1 Preview</h3>
+                                    <p class="text-xs text-gray-500">Topic: Solving Multi-Step Equations</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Live Output</span>
+                            </div>
+                            <div class="space-y-4 font-serif text-sm">
+                                <div class="p-3 bg-slate-50 rounded border border-gray-200">
+                                    <span class="font-bold text-kuta-blue">1)</span> Solve for <span class="italic">x</span>: 
+                                    <div class="text-center font-sans font-bold my-2 text-lg text-indigo-950">4(2x - 3) + 7 = 35</div>
+                                    <div class="text-xs font-sans text-emerald-700 bg-emerald-50 p-2 rounded mt-2 border border-emerald-200">
+                                        <i class="fa-solid fa-check-circle mr-1"></i> <strong>Answer:</strong> x = 5
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-slate-50 rounded border border-gray-200">
+                                    <span class="font-bold text-kuta-blue">2)</span> Factor completely:
+                                    <div class="text-center font-sans font-bold my-2 text-lg text-indigo-950">x² - 9x + 20</div>
+                                    <div class="text-xs font-sans text-emerald-700 bg-emerald-50 p-2 rounded mt-2 border border-emerald-200">
+                                        <i class="fa-solid fa-check-circle mr-1"></i> <strong>Answer:</strong> (x - 4)(x - 5)
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('generator')" class="w-full mt-4 bg-kuta-blue hover:bg-kuta-navy text-white text-xs font-bold py-2 rounded transition text-center">
+                                Regenerate with New Numbers <i class="fa-solid fa-rotate mr-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products / Subjects Cards Grid -->
+            <section class="max-w-7xl mx-auto px-4 py-16">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-extrabold text-kuta-navy sm:text-4xl">Software Suite & Worksheets</h2>
+                    <p class="mt-3 text-lg text-gray-600">Choose a course to generate unlimited customizable assignments, quizzes, and test forms.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Pre-Algebra -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-teal-600 to-teal-700 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-calculator text-3xl opacity-80"></i>
+                                <span class="bg-teal-900/40 text-teal-100 text-xs px-2.5 py-1 rounded-full font-medium">Middle School</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Pre-Algebra</h3>
+                            <p class="text-teal-100 text-xs mt-1">Fractions, decimals, integers, linear equations</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>Covers arithmetic properties, order of operations, proportions, single/multi-step equations, geometry basics, and probability.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-teal-600 mr-2"></i>90+ curriculum topics</li>
+                                <li><i class="fa-solid fa-check text-teal-600 mr-2"></i>Multiple choice & free response</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Pre-Algebra')" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Pre-Algebra')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Algebra 1 -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-arrow-trend-up text-3xl opacity-80"></i>
+                                <span class="bg-blue-950/40 text-blue-100 text-xs px-2.5 py-1 rounded-full font-medium">High School</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Algebra 1</h3>
+                            <p class="text-blue-100 text-xs mt-1">Equations, inequalities, polynomials, factoring</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>From linear functions and systems of equations to quadratic functions, radicals, and rational expressions.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>120+ fundamental topics</li>
+                                <li><i class="fa-solid fa-check text-blue-600 mr-2"></i>Automatic graph plotting</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Algebra 1')" class="flex-1 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Algebra 1')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Geometry -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-amber-600 to-amber-700 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-shapes text-3xl opacity-80"></i>
+                                <span class="bg-amber-950/40 text-amber-100 text-xs px-2.5 py-1 rounded-full font-medium">High School</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Geometry</h3>
+                            <p class="text-amber-100 text-xs mt-1">Proofs, angles, transformations, trigonometry</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>Covers geometric proofs, parallel line properties, triangle congruence, quadrilaterals, circles, and area/volume calculations.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-amber-600 mr-2"></i>100+ diagram-rich topics</li>
+                                <li><i class="fa-solid fa-check text-amber-600 mr-2"></i>Pythagorean & Right Triangle Trig</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Geometry')" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Geometry')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Algebra 2 -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-purple-700 to-purple-900 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-square-root-variable text-3xl opacity-80"></i>
+                                <span class="bg-purple-950/40 text-purple-100 text-xs px-2.5 py-1 rounded-full font-medium">Advanced HS</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Algebra 2</h3>
+                            <p class="text-purple-100 text-xs mt-1">Complex numbers, logarithms, conic sections</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>Polynomial operations, rational functions, exponential and logarithmic equations, sequences, series, and trigonometry.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-purple-600 mr-2"></i>Quadratic formula & complex roots</li>
+                                <li><i class="fa-solid fa-check text-purple-600 mr-2"></i>Logarithmic expansions</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Algebra 2')" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Algebra 2')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Precalculus -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-red-700 to-red-900 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-wave-square text-3xl opacity-80"></i>
+                                <span class="bg-red-950/40 text-red-100 text-xs px-2.5 py-1 rounded-full font-medium">Honors / AP</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Precalculus</h3>
+                            <p class="text-red-100 text-xs mt-1">Trig identities, vectors, matrices, polar coordinates</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>Advanced functions, unit circle trigonometry, analytic trig, parametric equations, matrices, and introductory limits.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-red-600 mr-2"></i>Vector operations & matrices</li>
+                                <li><i class="fa-solid fa-check text-red-600 mr-2"></i>Trig identities verification</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Precalculus')" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Precalculus')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calculus -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-xl transition flex flex-col overflow-hidden group">
+                        <div class="bg-gradient-to-r from-emerald-700 to-emerald-900 p-5 text-white">
+                            <div class="flex justify-between items-center">
+                                <i class="fa-solid fa-infinity text-3xl opacity-80"></i>
+                                <span class="bg-emerald-950/40 text-emerald-100 text-xs px-2.5 py-1 rounded-full font-medium">AP / College</span>
+                            </div>
+                            <h3 class="text-2xl font-bold mt-3">Infinite Calculus</h3>
+                            <p class="text-emerald-100 text-xs mt-1">Limits, derivatives, integrals, differential equations</p>
+                        </div>
+                        <div class="p-6 flex-grow space-y-3 text-sm text-gray-600">
+                            <p>Comprehensive Calculus AB & BC content: differentiation rules, chain rule, integration, power series, and slope fields.</p>
+                            <ul class="space-y-1.5 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                                <li><i class="fa-solid fa-check text-emerald-600 mr-2"></i>Power, product & chain rules</li>
+                                <li><i class="fa-solid fa-check text-emerald-600 mr-2"></i>Definite & indefinite integrals</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex gap-2">
+                            <button onclick="launchGeneratorSubject('Calculus')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2 px-3 rounded text-xs transition text-center">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Generator
+                            </button>
+                            <button onclick="filterWorksheets('Calculus')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-3 rounded text-xs transition">
+                                Worksheets
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Math Teachers Love Vertex Section -->
+            <section class="bg-white py-16 border-t border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <h2 class="text-3xl font-extrabold text-kuta-navy">Why Educators Choose Vertex Math</h2>
+                        <p class="mt-2 text-gray-600">Save hours of lesson prep every week while creating tailored assessments.</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-4 gap-8 text-center">
+                        <div class="p-4">
+                            <div class="w-14 h-14 bg-blue-100 text-kuta-blue rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fa-solid fa-rotate"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Infinite Questions</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Never worry about students copying work. Generate endless parallel test versions with new numbers in one click.</p>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fa-solid fa-file-circle-check"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Step Answer Keys</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Every generated worksheet automatically includes an attached answer key for instant grading and student self-assessment.</p>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Custom Difficulty</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Easily differentiate instruction by tweaking problem difficulty levels for remedial or honors classes.</p>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fa-solid fa-print"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-900 text-lg mb-2">Clean Print Outputs</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Formats standard student paper headers with workspace margins designed specifically for real classroom use.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- INTERACTIVE WORKSHEET GENERATOR VIEW -->
+        <div id="view-generator" class="view-panel hidden py-8 px-4 max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- Generator Control Sidebar -->
+                <div class="lg:w-80 bg-white rounded-xl shadow-lg border border-gray-200 p-6 h-fit no-print">
+                    <div class="flex items-center justify-between pb-4 border-b border-gray-200 mb-5">
+                        <h2 class="font-bold text-gray-900 text-lg flex items-center">
+                            <i class="fa-solid fa-sliders text-kuta-blue mr-2"></i> Controls
+                        </h2>
+                        <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded">Studio v3.0</span>
+                    </div>
+
+                    <!-- Options Form -->
+                    <div class="space-y-5 text-sm">
+                        <!-- Subject Selection -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Subject</label>
+                            <select id="gen-subject" onchange="onSubjectChange()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 font-medium text-gray-800 focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                                <option value="Pre-Algebra">Pre-Algebra</option>
+                                <option value="Algebra 1" selected>Algebra 1</option>
+                                <option value="Geometry">Geometry</option>
+                                <option value="Algebra 2">Algebra 2</option>
+                                <option value="Precalculus">Precalculus</option>
+                                <option value="Calculus">Calculus</option>
+                            </select>
+                        </div>
+
+                        <!-- Topic Selection -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Topic</label>
+                            <select id="gen-topic" onchange="generateWorksheet()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 font-medium text-gray-800 focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                                <!-- Populated dynamically by JS -->
+                            </select>
+                        </div>
+
+                        <!-- Title Input -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Worksheet Header Title</label>
+                            <input type="text" id="gen-title" value="Multi-Step Equations Practice" oninput="updateWorksheetHeader()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2 font-medium text-gray-800 focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                        </div>
+
+                        <!-- Question Count -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold text-gray-700 uppercase tracking-wider">Number of Problems</label>
+                                <span id="gen-count-val" class="font-bold text-kuta-blue">8</span>
+                            </div>
+                            <input type="range" id="gen-count" min="4" max="16" step="2" value="8" oninput="document.getElementById('gen-count-val').innerText = this.value; generateWorksheet()" class="w-full accent-kuta-blue cursor-pointer">
+                        </div>
+
+                        <!-- Difficulty Slider -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Difficulty Level</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setDifficulty('easy')" id="diff-easy" class="diff-btn py-1.5 text-xs font-bold rounded border border-gray-300 hover:bg-gray-100">Easy</button>
+                                <button onclick="setDifficulty('medium')" id="diff-medium" class="diff-btn py-1.5 text-xs font-bold rounded border bg-kuta-blue text-white border-kuta-blue">Medium</button>
+                                <button onclick="setDifficulty('hard')" id="diff-hard" class="diff-btn py-1.5 text-xs font-bold rounded border border-gray-300 hover:bg-gray-100">Hard</button>
+                            </div>
+                        </div>
+
+                        <!-- Display Toggles -->
+                        <div class="pt-2 border-t border-gray-200 space-y-3">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-answers" onchange="toggleAnswers()" checked class="w-4 h-4 text-kuta-blue rounded focus:ring-kuta-blue">
+                                <span class="ml-2 text-xs font-semibold text-gray-700">Include Answer Key</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-workspace" onchange="toggleWorkspace()" checked class="w-4 h-4 text-kuta-blue rounded focus:ring-kuta-blue">
+                                <span class="ml-2 text-xs font-semibold text-gray-700">Include Work Area Spacing</span>
+                            </label>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-4 space-y-2">
+                            <button onclick="generateWorksheet()" class="w-full bg-amber-500 hover:bg-amber-600 text-kuta-navy font-bold py-3 rounded-lg shadow transition flex items-center justify-center space-x-2 text-sm">
+                                <i class="fa-solid fa-rotate"></i>
+                                <span>Generate New Version</span>
+                            </button>
+                            <button onclick="window.print()" class="w-full bg-kuta-blue hover:bg-kuta-navy text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center space-x-2 text-sm">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Print / Save as PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Worksheet Paper Display -->
+                <div class="flex-1 flex justify-center">
+                    <div id="printable-worksheet" class="paper-bg w-full max-w-3xl min-h-[950px] p-8 md:p-12 text-gray-900 border border-gray-300 rounded-xl relative flex flex-col justify-between">
+                        
+                        <div>
+                            <!-- Standard High School Test Header -->
+                            <div class="border-b-2 border-gray-800 pb-4 mb-8">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-2/3">
+                                        <h1 id="paper-title" class="text-2xl font-bold font-serif text-gray-900">Multi-Step Equations Practice</h1>
+                                        <p id="paper-subject-tag" class="text-xs text-gray-500 uppercase tracking-widest font-sans mt-0.5">Vertex Math - Infinite Algebra 1</p>
+                                    </div>
+                                    <div class="text-right text-sm font-serif space-y-2 w-1/3">
+                                        <div class="border-b border-gray-400 pb-0.5">Name: <span class="text-gray-400 font-sans text-xs">____________________</span></div>
+                                        <div class="border-b border-gray-400 pb-0.5">Date: <span class="text-gray-400 font-sans text-xs">________________ Period: ___</span></div>
+                                    </div>
+                                </div>
+                                <div class="text-xs italic text-gray-600 font-serif">
+                                    Directions: Solve each equation or express the simplified result in the space provided. Show all work.
+                                </div>
+                            </div>
+
+                            <!-- Generated Problems Grid -->
+                            <div id="problems-container" class="worksheet-grid">
+                                <!-- Problems will be dynamically injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Answer Key Section (Page 2 / Bottom) -->
+                        <div id="answer-key-section" class="mt-12 pt-8 border-t-2 border-dashed border-gray-300 page-break">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-lg text-gray-900 font-serif"><i class="fa-solid fa-key text-amber-500 mr-2 no-print"></i>Answer Key & Step-by-Step Solutions</h3>
+                                <span class="text-xs text-gray-500 font-mono">Form ID: #VTX-2026-X</span>
+                            </div>
+                            <div id="answers-container" class="grid grid-cols-2 gap-4 text-sm font-sans">
+                                <!-- Answers dynamically injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Worksheet Footer -->
+                        <div class="mt-12 pt-4 border-t border-gray-200 text-between flex justify-between text-[11px] text-gray-400 font-mono">
+                            <span>© Vertex Math Software LLC. All rights reserved.</span>
+                            <span>Created with Infinite Math Generator</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FREE WORKSHEETS DIRECTORY VIEW -->
+        <div id="view-worksheets" class="view-panel hidden max-w-7xl mx-auto px-4 py-10">
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-gray-200 mb-8">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-kuta-navy">Free Math Worksheets</h2>
+                        <p class="text-gray-600 text-sm mt-1">Select any topic below to open in the interactive generator or download standard versions.</p>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="worksheet-search" oninput="searchWorksheets()" placeholder="Search topic (e.g. factoring)..." class="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Subject Tabs -->
+                <div class="flex flex-wrap gap-2 mb-8 border-b border-gray-200 pb-3" id="subject-filter-tabs">
+                    <button onclick="filterWorksheets('All')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-kuta-blue text-white">All Subjects</button>
+                    <button onclick="filterWorksheets('Pre-Algebra')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Pre-Algebra</button>
+                    <button onclick="filterWorksheets('Algebra 1')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Algebra 1</button>
+                    <button onclick="filterWorksheets('Geometry')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Geometry</button>
+                    <button onclick="filterWorksheets('Algebra 2')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Algebra 2</button>
+                    <button onclick="filterWorksheets('Precalculus')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Precalculus</button>
+                    <button onclick="filterWorksheets('Calculus')" class="ws-filter-btn px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200">Calculus</button>
+                </div>
+
+                <!-- Worksheets List Container -->
+                <div id="worksheets-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS VIEW -->
+        <div id="view-products" class="view-panel hidden max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-extrabold text-kuta-navy">The Vertex Math Suite</h2>
+                <p class="mt-2 text-gray-600">Six standalone software programs covering K-12 math through college calculus.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Suite Feature Box -->
+                <div class="bg-gradient-to-r from-kuta-navy to-kuta-blue text-white rounded-2xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-2xl">
+                        <span class="bg-amber-400 text-kuta-navy font-bold text-xs px-3 py-1 rounded-full uppercase">Complete Teacher License</span>
+                        <h3 class="text-2xl font-bold">Bundle All 6 Math Software Programs</h3>
+                        <p class="text-blue-100 text-sm">Get Infinite Pre-Algebra, Algebra 1, Geometry, Algebra 2, Precalculus, and Calculus in one complete desktop & web suite.</p>
+                    </div>
+                    <button onclick="switchTab('pricing')" class="bg-amber-500 hover:bg-amber-600 text-kuta-navy font-bold px-6 py-3 rounded-lg shadow-md transition whitespace-nowrap">
+                        View Purchasing Options
+                    </button>
+                </div>
+
+                <!-- Product Features Comparison -->
+                <div class="bg-white rounded-xl shadow border border-gray-200 p-8 space-y-6">
+                    <h3 class="text-xl font-bold text-gray-900 border-b border-gray-200 pb-3">Key Features in Every Program</h3>
+                    <div class="grid md:grid-cols-3 gap-6 text-sm text-gray-600">
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-kuta-navy flex items-center"><i class="fa-solid fa-wand-magic text-amber-500 mr-2"></i> Custom Questions</h4>
+                            <p>Add your own questions, edit existing problems, or let the algorithm automatically generate brand new problem sets.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-kuta-navy flex items-center"><i class="fa-solid fa-layer-group text-amber-500 mr-2"></i> Multiple Test Versions</h4>
+                            <p>Instantly create Version A, B, C, and D of any exam with identical problem difficulty levels but randomized numbers.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-kuta-navy flex items-center"><i class="fa-solid fa-file-export text-amber-500 mr-2"></i> Export Options</h4>
+                            <p>Export directly to PDF, print physical paper sheets, or copy high-resolution vector diagrams into Microsoft Word.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRICING VIEW -->
+        <div id="view-pricing" class="view-panel hidden max-w-7xl mx-auto px-4 py-12">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-extrabold text-kuta-navy">Simple, Transparent Licensing</h2>
+                <p class="mt-2 text-gray-600">Choose between individual teacher licenses or school-wide site licenses.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Single Course -->
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Single Course</h3>
+                        <p class="text-xs text-gray-500 mt-1">Choice of any 1 Individual Program</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-kuta-navy">$90</span>
+                            <span class="text-gray-500 text-xs"> / year per teacher</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-gray-600">
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Full access to selected software</li>
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Unlimited worksheet creation</li>
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Automatic updates & new topics</li>
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Answer key generator</li>
+                        </ul>
+                    </div>
+                    <button onclick="openTrialModal()" class="w-full mt-8 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-lg text-xs transition">Order Single Program</button>
+                </div>
+
+                <!-- Complete Teacher Suite -->
+                <div class="bg-gradient-to-b from-kuta-navy to-kuta-blue text-white rounded-2xl shadow-xl p-8 flex flex-col justify-between transform md:-translate-y-2 border-2 border-amber-400 relative">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-kuta-navy text-[10px] font-extrabold uppercase px-3 py-1 rounded-full shadow">Most Popular</span>
+                    <div>
+                        <h3 class="text-xl font-bold">Teacher Suite</h3>
+                        <p class="text-xs text-blue-200 mt-1">All 6 Math Software Programs Included</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-amber-400">$210</span>
+                            <span class="text-blue-200 text-xs"> / year per teacher</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-blue-100">
+                            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Includes Pre-Alg, Alg 1, Geometry, Alg 2, Precalc & Calculus</li>
+                            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Interactive Web Generator Studio</li>
+                            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Priority Customer Support</li>
+                            <li><i class="fa-solid fa-check text-amber-400 mr-2"></i>Multi-device installation</li>
+                        </ul>
+                    </div>
+                    <button onclick="openTrialModal()" class="w-full mt-8 bg-amber-500 hover:bg-amber-600 text-kuta-navy font-bold py-3 rounded-lg text-xs shadow-lg transition">Get Complete Suite</button>
+                </div>
+
+                <!-- School Site License -->
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">School / District</h3>
+                        <p class="text-xs text-gray-500 mt-1">Unlimited teachers in one building</p>
+                        <div class="my-6">
+                            <span class="text-4xl font-extrabold text-kuta-navy">$550</span>
+                            <span class="text-gray-500 text-xs"> / year per building</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-gray-600">
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Unlimited math department users</li>
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Purchase order invoicing supported</li>
+                            <li><i class="fa-solid fa-check text-green-600 mr-2"></i>Dedicated district onboarding</li>
+                        </ul>
+                    </div>
+                    <button onclick="openTrialModal()" class="w-full mt-8 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-lg text-xs transition">Request District Quote</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-kuta-header text-gray-400 text-xs py-10 border-t border-blue-900 no-print">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8 mb-8">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-amber-500 rounded flex items-center justify-center font-bold text-kuta-navy text-sm">V</div>
+                    <span class="text-base font-bold text-white font-serif">Vertex Math</span>
+                </div>
+                <p class="text-gray-400 leading-relaxed">Dedicated to providing high quality math worksheet generation software for teachers and students.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">Products</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="launchGeneratorSubject('Pre-Algebra')" class="hover:text-amber-400">Infinite Pre-Algebra</a></li>
+                    <li><a href="#" onclick="launchGeneratorSubject('Algebra 1')" class="hover:text-amber-400">Infinite Algebra 1</a></li>
+                    <li><a href="#" onclick="launchGeneratorSubject('Geometry')" class="hover:text-amber-400">Infinite Geometry</a></li>
+                    <li><a href="#" onclick="launchGeneratorSubject('Algebra 2')" class="hover:text-amber-400">Infinite Algebra 2</a></li>
+                    <li><a href="#" onclick="launchGeneratorSubject('Calculus')" class="hover:text-amber-400">Infinite Calculus</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">Free Resources</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="switchTab('worksheets')" class="hover:text-amber-400">Free Algebra Worksheets</a></li>
+                    <li><a href="#" onclick="switchTab('worksheets')" class="hover:text-amber-400">Free Geometry Worksheets</a></li>
+                    <li><a href="#" onclick="switchTab('generator')" class="hover:text-amber-400">Online Worksheet Generator</a></li>
+                    <li><a href="#" onclick="openTrialModal()" class="hover:text-amber-400">Free Software Trial Download</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-3">Support & Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="openTrialModal()" class="hover:text-amber-400">Contact Support</a></li>
+                    <li><a href="#" class="hover:text-amber-400">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-amber-400">Terms of Service</a></li>
+                    <li><span class="text-gray-500">Vertex Math LLC © 2026</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 pt-6 border-t border-blue-900/50 text-center text-[11px] text-gray-500">
+            Designed for math educators. Math expressions rendered dynamically.
+        </div>
+    </footer>
+
+    <!-- FREE TRIAL / DOWNLOAD MODAL -->
+    <div id="trial-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative border border-gray-200">
+            <button onclick="closeTrialModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center space-y-3">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-download"></i>
+                </div>
+                <h3 class="text-xl font-bold text-kuta-navy">Download Free 14-Day Trial</h3>
+                <p class="text-xs text-gray-600">Experience the full power of Vertex Math Infinite suite with no credit card required.</p>
+            </div>
+            <form onsubmit="handleModalSubmit(event)" class="mt-5 space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Full Name</label>
+                    <input type="text" required placeholder="Jane Doe" class="w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">School / Personal Email</label>
+                    <input type="email" required placeholder="teacher@school.edu" class="w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Select Program</label>
+                    <select class="w-full p-2.5 border border-gray-300 rounded focus:ring-2 focus:ring-kuta-blue focus:outline-none">
+                        <option>Complete Teacher Suite (All 6)</option>
+                        <option>Infinite Pre-Algebra</option>
+                        <option>Infinite Algebra 1</option>
+                        <option>Infinite Geometry</option>
+                        <option>Infinite Algebra 2</option>
+                        <option>Infinite Precalculus</option>
+                        <option>Infinite Calculus</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-kuta-blue hover:bg-kuta-navy text-white font-bold py-3 rounded-lg text-sm shadow transition">
+                    Start Free Download
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Structure for Topics & Generators
+        const TOPICS_DATA = {
+            "Pre-Algebra": [
+                { id: "pre-1", name: "One-Step Equations", diff: "easy" },
+                { id: "pre-2", name: "Two-Step Equations", diff: "medium" },
+                { id: "pre-3", name: "Simplifying Fractions", diff: "easy" },
+                { id: "pre-4", name: "Order of Operations (PEMDAS)", diff: "medium" }
+            ],
+            "Algebra 1": [
+                { id: "alg1-1", name: "Multi-Step Equations Practice", diff: "medium" },
+                { id: "alg1-2", name: "Solving Systems of Equations", diff: "hard" },
+                { id: "alg1-3", name: "Factoring Simple Trinomials", diff: "medium" },
+                { id: "alg1-4", name: "Exponent Rules & Properties", diff: "easy" }
+            ],
+            "Geometry": [
+                { id: "geom-1", name: "Pythagorean Theorem", diff: "medium" },
+                { id: "geom-2", name: "Area and Perimeter of Polygons", diff: "easy" },
+                { id: "geom-3", name: "Right Triangle Trigonometry (SOH CAH TOA)", diff: "hard" }
+            ],
+            "Algebra 2": [
+                { id: "alg2-1", name: "Quadratic Formula & Complex Roots", diff: "hard" },
+                { id: "alg2-2", name: "Solving Logarithmic Equations", diff: "hard" },
+                { id: "alg2-3", name: "Polynomial Long Division", diff: "medium" }
+            ],
+            "Precalculus": [
+                { id: "precalc-1", name: "Unit Circle Trig Equations", diff: "hard" },
+                { id: "precalc-2", name: "Matrix Operations & Determinants", diff: "medium" }
+            ],
+            "Calculus": [
+                { id: "calc-1", name: "Power Rule Differentiation", diff: "easy" },
+                { id: "calc-2", name: "Indefinite Integration Basics", diff: "medium" },
+                { id: "calc-3", name: "Chain Rule Derivatives", diff: "hard" }
+            ]
+        };
+
+        let currentDifficulty = 'medium';
+
+        // Navigation Controller
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            // Nav highlight state
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-amber-400');
+                btn.classList.add('text-white');
+            });
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.classList.add('text-amber-400');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (tabId === 'generator') {
+                populateTopics();
+                generateWorksheet();
+            } else if (tabId === 'worksheets') {
+                renderWorksheetsDirectory('All');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function launchGeneratorSubject(subject) {
+            switchTab('generator');
+            document.getElementById('gen-subject').value = subject;
+            onSubjectChange();
+        }
+
+        function onSubjectChange() {
+            populateTopics();
+            generateWorksheet();
+        }
+
+        function populateTopics() {
+            const subject = document.getElementById('gen-subject').value;
+            const topicSelect = document.getElementById('gen-topic');
+            topicSelect.innerHTML = '';
+
+            const topics = TOPICS_DATA[subject] || [];
+            topics.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.name;
+                opt.textContent = t.name;
+                topicSelect.appendChild(opt);
+            });
+
+            if (topics.length > 0) {
+                document.getElementById('gen-title').value = topics[0].name;
+            }
+            updateWorksheetHeader();
+        }
+
+        function updateWorksheetHeader() {
+            const titleVal = document.getElementById('gen-title').value || "Math Practice";
+            const subjectVal = document.getElementById('gen-subject').value;
+            document.getElementById('paper-title').innerText = titleVal;
+            document.getElementById('paper-subject-tag').innerText = `Vertex Math - Infinite ${subjectVal}`;
+        }
+
+        function setDifficulty(diff) {
+            currentDifficulty = diff;
+            document.querySelectorAll('.diff-btn').forEach(btn => {
+                btn.classList.remove('bg-kuta-blue', 'text-white', 'border-kuta-blue');
+                btn.classList.add('border-gray-300');
+            });
+            const activeBtn = document.getElementById(`diff-${diff}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-kuta-blue', 'text-white', 'border-kuta-blue');
+            }
+            generateWorksheet();
+        }
+
+        function toggleAnswers() {
+            const show = document.getElementById('toggle-answers').checked;
+            document.getElementById('answer-key-section').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleWorkspace() {
+            const showSpace = document.getElementById('toggle-workspace').checked;
+            document.querySelectorAll('.problem-workspace').forEach(el => {
+                el.style.display = showSpace ? 'block' : 'none';
+            });
+        }
+
+        // Random Number Helper
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Dynamic Problem Generator Engine
+        function generateWorksheet() {
+            updateWorksheetHeader();
+            const subject = document.getElementById('gen-subject').value;
+            const topic = document.getElementById('gen-topic').value;
+            const count = parseInt(document.getElementById('gen-count').value, 10);
+
+            const problemsContainer = document.getElementById('problems-container');
+            const answersContainer = document.getElementById('answers-container');
+
+            problemsContainer.innerHTML = '';
+            answersContainer.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                let problemData = createMathProblem(subject, topic, i);
+
+                // Render Problem Box
+                const probBox = document.createElement('div');
+                probBox.className = "flex flex-col justify-between min-h-[110px]";
+                probBox.innerHTML = `
+                    <div>
+                        <div class="flex items-start space-x-2">
+                            <span class="font-bold text-base text-gray-900">${i})</span>
+                            <div class="math-expr font-serif text-gray-900 pt-0.5">${problemData.question}</div>
+                        </div>
+                    </div>
+                    <div class="problem-workspace h-20 border-b border-dotted border-gray-300"></div>
+                `;
+                problemsContainer.appendChild(probBox);
+
+                // Render Answer Box
+                const ansBox = document.createElement('div');
+                ansBox.className = "bg-slate-50 p-2.5 rounded border border-gray-200 text-xs";
+                ansBox.innerHTML = `
+                    <span class="font-bold text-kuta-blue">${i})</span> <strong>${problemData.answer}</strong>
+                    ${problemData.step ? `<p class="text-[11px] text-gray-500 mt-1">${problemData.step}</p>` : ''}
+                `;
+                answersContainer.appendChild(ansBox);
+            }
+
+            toggleWorkspace();
+            toggleAnswers();
+        }
+
+        // Problem Math Generator Switcher
+        function createMathProblem(subject, topic, index) {
+            let q = "", a = "", step = "";
+
+            if (topic.includes("Multi-Step Equations")) {
+                let x = randInt(2, 9);
+                let m = randInt(2, 5);
+                let b = randInt(3, 12);
+                let c = randInt(1, 10);
+                let rhs = m * x - b + c;
+                q = `Solve for <span class="italic">x</span>: <br><span class="font-bold font-sans">${m}x - ${b} + ${c} = ${rhs}</span>`;
+                a = `x = ${x}`;
+                step = `Combine terms: ${m}x - ${b - c} = ${rhs} ➔ ${m}x = ${rhs + (b - c)}`;
+            } 
+            else if (topic.includes("One-Step Equations")) {
+                let x = randInt(3, 15);
+                let a_coef = randInt(2, 8);
+                let rhs = a_coef * x;
+                q = `Solve: <span class="font-bold font-sans">${a_coef}x = ${rhs}</span>`;
+                a = `x = ${x}`;
+                step = `Divide both sides by ${a_coef}`;
+            }
+            else if (topic.includes("Factoring Simple")) {
+                let r1 = randInt(1, 7);
+                let r2 = randInt(1, 7);
+                let b = r1 + r2;
+                let c = r1 * r2;
+                q = `Factor completely: <br><span class="font-bold font-sans">x² + ${b}x + ${c}</span>`;
+                a = `(x + ${r1})(x + ${r2})`;
+                step = `Find factors of ${c} that add to ${b}`;
+            }
+            else if (topic.includes("Pythagorean Theorem")) {
+                let a_side = randInt(3, 9);
+                let b_side = randInt(4, 12);
+                let c_sq = (a_side * a_side) + (b_side * b_side);
+                q = `Find the hypotenuse <span class="italic">c</span> of a right triangle with legs <span class="font-sans font-bold">a = ${a_side}</span> and <span class="font-sans font-bold">b = ${b_side}</span>.`;
+                a = `c = √${c_sq} ≈ ${Math.sqrt(c_sq).toFixed(2)}`;
+                step = `c² = ${a_side}² + ${b_side}² = ${c_sq}`;
+            }
+            else if (topic.includes("Power Rule")) {
+                let n = randInt(2, 5);
+                let coef = randInt(2, 6);
+                q = `Find <span class="italic">f'(x)</span> if <span class="font-serif italic">f(x) = ${coef}x<sup>${n}</sup></span>`;
+                a = `f'(x) = ${coef * n}x<sup>${n - 1}</sup>`;
+                step = `Bring exponent down: ${coef} × ${n} = ${coef * n}`;
+            }
+            else if (topic.includes("Logarithmic Equations")) {
+                let x = randInt(2, 8);
+                let base = 2;
+                let val = Math.pow(base, x);
+                q = `Solve for <span class="italic">x</span>: <br><span class="font-bold font-sans">log₂(${val}) = x</span>`;
+                a = `x = ${x}`;
+                step = `2<sup>x</sup> = ${val} ➔ 2<sup>${x}</sup> = ${val}`;
+            }
+            else {
+                // Fallback math question generator
+                let a_num = randInt(2, 10);
+                let b_num = randInt(5, 20);
+                q = `Simplify the algebraic expression: <br><span class="font-bold font-sans">${a_num}(x + ${b_num}) - ${a_num * b_num}</span>`;
+                a = `${a_num}x`;
+                step = `Distribute ${a_num}: ${a_num}x + ${a_num * b_num} - ${a_num * b_num}`;
+            }
+
+            return { question: q, answer: a, step: step };
+        }
+
+        function renderWorksheetsDirectory(filterSubject) {
+            const list = document.getElementById('worksheets-list');
+            list.innerHTML = '';
+
+            let allTopics = [];
+            Object.keys(TOPICS_DATA).forEach(subj => {
+                if (filterSubject === 'All' || filterSubject === subj) {
+                    TOPICS_DATA[subj].forEach(t => {
+                        allTopics.push({ ...t, subject: subj });
+                    });
+                }
+            });
+
+            allTopics.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-gray-200 rounded-lg p-5 hover:border-kuta-blue transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-100 text-kuta-blue">${item.subject}</span>
+                            <span class="text-xs text-gray-400 capitalize">${item.diff}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-base mb-1">${item.name}</h4>
+                        <p class="text-xs text-gray-500">Free printable practice worksheet with randomized problem sets & answers.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-gray-200 flex gap-2">
+                        <button onclick="launchSpecificTopic('${item.subject}', '${item.name}')" class="flex-1 bg-kuta-blue hover:bg-kuta-navy text-white text-xs font-bold py-2 rounded transition text-center">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Open Studio
+                        </button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function filterWorksheets(subject) {
+            document.querySelectorAll('.ws-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-kuta-blue', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-kuta-blue', 'text-white');
+            renderWorksheetsDirectory(subject);
+        }
+
+        function searchWorksheets() {
+            const query = document.getElementById('worksheet-search').value.toLowerCase();
+            const cards = document.querySelectorAll('#worksheets-list > div');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function launchSpecificTopic(subject, topicName) {
+            switchTab('generator');
+            document.getElementById('gen-subject').value = subject;
+            populateTopics();
+            document.getElementById('gen-topic').value = topicName;
+            document.getElementById('gen-title').value = topicName;
+            generateWorksheet();
+        }
+
+        // Modal Controls
+        function openTrialModal() {
+            document.getElementById('trial-modal').classList.remove('hidden');
+        }
+
+        function closeTrialModal() {
+            document.getElementById('trial-modal').classList.add('hidden');
+        }
+
+        function handleModalSubmit(e) {
+            e.preventDefault();
+            alert("Thank you! Your free trial request has been submitted. Check your inbox for download details.");
+            closeTrialModal();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            populateTopics();
+            generateWorksheet();
+        };
+    </script>
+</body>
+</html>
